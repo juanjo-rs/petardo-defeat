@@ -1,3 +1,4 @@
 class Vertice:
-    def __init__(self, valor):
-        self.valor = valor
+    def __init__(self, id):
+        self.id= id
+        

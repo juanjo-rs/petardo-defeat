@@ -11,8 +11,8 @@ class Grafo:
         self.matriz_adyacencia = []
         self.indices={}
     
-    def agregarVertice(self,valor):
-        vertice = Vertice(valor)
+    def agregarVertice(self, vertice:Vertice):
+        
         if vertice.valor not in self.indices:
             self.vertices.append(vertice)
             self.indices[vertice.valor]=len(self.vertices)-1
@@ -21,23 +21,31 @@ class Grafo:
                 fila.append(0)
             self.matriz_adyacencia.append([0] * len(self.vertices))
     
-    def agregarArista(self, valor_inicio, valor_final,valor=None):
-        if valor_inicio not in self.indices:
-            self.agregarVertice(valor_inicio)
-        i1 = self.indices[valor_inicio]
-        if valor_final not in self.indices:
-            self.agregarVertice(valor_final)
-        i2 = self.indices[valor_final]
+    def agregarArista(self, arista: Arista):
+        
+     u = arista.vertice_inicio
+     v = arista.vertice_fin
 
-        vertice_inicial = self.vertices[i1]
-        vertice_final = self.vertices[i2]
-        self.aristas.append(Arista(vertice_inicial, vertice_final, valor))
-        self.lista_adyacencia[vertice_inicial].append((vertice_final, valor))
-        self.matriz_adyacencia[i1][i2] = valor
-        if not self.dirigido:
-            self.lista_adyacencia[vertice_final].append((vertice_inicial, valor))
-            self.matriz_adyacencia[i2][i1] = valor
+   
+     if u.valor not in self.indices:
+        self.agregarVertice(u)
+     if v.valor not in self.indices:
+        self.agregarVertice(v)
+
+ 
+     i1 = self.indices[u.valor]
+     i2 = self.indices[v.valor]
+
     
+     self.aristas.append(arista)
+     self.lista_adyacencia[u].append((v, arista))
+     self.matriz_adyacencia[i1][i2] = arista
+
+    
+     if not self.dirigido:
+        self.lista_adyacencia[v].append((u, arista))
+        self.matriz_adyacencia[i2][i1] = arista
+        
     def recorridoAnchura(self, valor_inicial):
         if valor_inicial not in self.indices:
             print("El vertice no existe")
