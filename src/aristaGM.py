@@ -12,6 +12,7 @@ class AristaGM(Arista):
             raise ValueError("la velocidad es una cantidad invalida")
         self.velocidad = velocidad
         self.tiempo_recorrido = self._calcular_tiempo(self.longitud, self.velocidad)
-
+        self.peso_dinamico=self.tiempo_recorrido
+    
     def _calcular_tiempo(self, longitud, velocidad):
         return longitud / velocidad

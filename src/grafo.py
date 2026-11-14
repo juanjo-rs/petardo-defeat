@@ -26,7 +26,7 @@ class Grafo:
 
         if u.id not in self.indices:
             self.agregarVertice(u)
-        if v.id not in self.indices:
+        if v.id not in self.indices: 
             self.agregarVertice(v)
 
         i1 = self.indices[u.id]
@@ -95,3 +95,13 @@ class Grafo:
             actual = self.aristas[contador]
             return actual if actual.tiempo_recorrido < resto.tiempo_recorrido else resto
         return auxiliar(0)
+
+    def obtener_aristas(self):
+            return self.aristas
+        
+    def obtener_arista(self,u:Vertice,v:Vertice):
+       for i in range(len(self.aristas)):
+           if (self.aristas[i].vertice_inicio==u and self.aristas[i].vertice_fin==v)or(self.aristas[i].vertice_inicio==v and self.aristas[i].vertice_fin==u):
+               return self.aristas[i]
+       return None
+        
