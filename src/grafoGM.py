@@ -37,6 +37,3 @@ class GrafoGM(Grafo):
                  cola.append(adyacente)
                  
      return False
-      
-         
-   
