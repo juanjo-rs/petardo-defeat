@@ -1,6 +1,6 @@
 from verticeGE import VerticeGE
 from grafo import Grafo
-
+from collections import deque
 class GrafoGE(Grafo):
     
     def __init__(self, base: VerticeGE, cantidad_k, d0=1.0, beta=0.0):
@@ -11,6 +11,7 @@ class GrafoGE(Grafo):
         self.beta = beta
         self.torres = []
         self.arbol_minimo = {}
+        self.diccionario_tiempo={}
 
     def prim(self, vertice_inicial):
         if vertice_inicial not in self.vertices or vertice_inicial != self.base:
@@ -71,3 +72,28 @@ class GrafoGE(Grafo):
             vertices_vistos.append(vertice_menor)
         self.arbol_minimo=arbol_minimo
         return arbol_minimo
+    
+    
+    def calcular_tiempos(self):
+        
+        cola=deque([self.base])
+        marcas=[]
+        diccionario_tiempos={}
+        diccionario_tiempos[self.base]=0
+        while cola:
+            
+           vertice= cola.popleft()
+           marcas.append(vertice)
+           if len(self.arbol_minimo[vertice])>0:
+            for n in self.arbol_minimo[vertice]:
+                
+               adyacente=n[0]
+               tiempo=diccionario_tiempos[vertice]+n[1].tiempo_pie
+               if adyacente not in cola and adyacente not in marcas:
+                   cola.append(adyacente)
+                   diccionario_tiempos[adyacente]=tiempo
+        self.diccionario_tiempo=diccionario_tiempos
+        return diccionario_tiempos
+                   
+           
+           

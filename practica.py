@@ -266,4 +266,62 @@ recorrer(conexiones1)
                         
        
                         
-                    
+def dijkstra(self, vertice_inicial, vertice_objetivo):
+    if vertice_inicial not in self.vertices or vertice_objetivo not in self.vertices:
+        return None
+    distancias = {}
+    previos = {}
+    por_visitar = []
+    por_visitar.append((0, vertice_inicial))
+    visitados = set()
+    for n in self.vertices:
+        previos[n] = None
+        if n == vertice_inicial:
+            distancias[n] = 0
+        else:
+            distancias[n] = float('inf')
+    return self._dijkstra(vertice_inicial, vertice_objetivo, distancias, previos, por_visitar, visitados)
+
+def _dijkstra(self, vertice_inicial, vertice_objetivo, distancias, previos, por_visitar, visitados):
+    while por_visitar:
+        menor = float('inf')
+        vertice_actual = None
+        
+        for n in por_visitar:
+            if n[0] < menor:
+                menor = n[0]
+                vertice_actual = n[1]
+                tupla_menor = n
+        por_visitar.remove(tupla_menor)
+        
+        if vertice_actual not in visitados:
+            visitados.add(vertice_actual)
+        else:
+            continue
+        if vertice_actual == vertice_objetivo:
+            break
+        conexiones = self.lista_adyacencia[vertice_actual]
+        for n in conexiones:
+            if n[1].habilitado:
+                vecino = n[0]
+                if vecino in visitados:
+                    continue
+                nuevo_costo = distancias[vertice_actual] + n[1].peso_dinamico
+                if nuevo_costo < distancias[vecino]:
+                    distancias[vecino] = nuevo_costo
+                    previos[vecino] = vertice_actual
+                    tupla = (nuevo_costo, vecino)
+                    por_visitar.append(tupla)
+
+    costo_objetivo = distancias[vertice_objetivo]
+    if costo_objetivo == float('inf'):
+        return None
+        
+    ruta = []
+    paso = vertice_objetivo
+    while paso is not None:
+        ruta.append(paso)
+        paso = previos[paso]
+    
+    ruta.reverse()
+    return (costo_objetivo, ruta)
