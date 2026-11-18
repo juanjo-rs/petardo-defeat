@@ -2,7 +2,7 @@ from arista import Arista
 
 
 class AristaGM(Arista):
-    def __init__(self, id, vertice_inicio, vertice_fin, habilitado, longitud: float, velocidad: float,cubierto=False):
+    def __init__(self, id, vertice_inicio, vertice_fin, habilitado, longitud: float, velocidad: float,vigilado=False):
         super().__init__(vertice_inicio, vertice_fin, habilitado)
         self.id=id
         if longitud <=0:
@@ -13,7 +13,7 @@ class AristaGM(Arista):
         self.velocidad = velocidad
         self.tiempo_recorrido = self._calcular_tiempo(self.longitud, self.velocidad)
         self.peso_dinamico=self.tiempo_recorrido
-        self.cubierto=cubierto
+        self.vigilado=vigilado
     
     def _calcular_tiempo(self, longitud, velocidad):
         return longitud / velocidad
