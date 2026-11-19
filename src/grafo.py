@@ -1,6 +1,6 @@
 from arista import Arista
 from vertice import Vertice
-
+from collections import deque
 
 class Grafo:
     def __init__(self, dirigido=False):
@@ -104,4 +104,5 @@ class Grafo:
            if (self.aristas[i].vertice_inicio==u and self.aristas[i].vertice_fin==v)or(self.aristas[i].vertice_inicio==v and self.aristas[i].vertice_fin==u):
                return self.aristas[i]
        return None
+  
         

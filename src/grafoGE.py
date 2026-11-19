@@ -1,6 +1,7 @@
 from verticeGE import VerticeGE
 from grafo import Grafo
 from collections import deque
+from torre import Torre
 class GrafoGE(Grafo):
     
     def __init__(self, base: VerticeGE, cantidad_k, d0=1.0, beta=0.0):
@@ -135,7 +136,10 @@ class GrafoGE(Grafo):
                 for arista in lista_aristaGM:
                     if not arista.vigilado and vertice_elegido.alcanza_corredor(arista):
                         arista.vigilado = True
-                        
+            self.torres=torres_elegidas 
+            for v in torres_elegidas:
+                v.torre=Torre(v.altura,self.beta)
+                 
             return torres_elegidas
                             
                     
@@ -149,3 +153,5 @@ class GrafoGE(Grafo):
             if not n.vigilado and vertice.alcanza_corredor(n):
                 contador+=n.longitud
         return contador
+    
+    
