@@ -8,6 +8,7 @@ class Soldado:
         self.daño=self.determinar_daño()
         self.alcance_base=self.determinar_alcance_base()
         self.frecuencia=self.determinar_frecuencia()
+        self.en_transito = False 
         
     def determinar_costo(self):
         if self.unidad=="infanteria":

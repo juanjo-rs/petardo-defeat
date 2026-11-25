@@ -2,6 +2,7 @@ from verticeGE import VerticeGE
 from grafo import Grafo
 from collections import deque
 from torre import Torre
+from soldado import Soldado
 class GrafoGE(Grafo):
     
     def __init__(self, base: VerticeGE, cantidad_k, d0=1.0, beta=0.0):
@@ -155,3 +156,108 @@ class GrafoGE(Grafo):
         return contador
     
     
+    def dijkstra_terrestre(self, origen: VerticeGE, destino: VerticeGE, medio: str):
+        if origen not in self.vertices or destino not in self.vertices:
+            return ([], None)
+
+        distancias = {}
+        caminos = {}
+        adyacencias = {}
+        vistos = []
+
+        
+        for vertice in self.vertices:
+            distancias[vertice] = float('inf')
+            caminos[vertice] = []
+            adyacencias[vertice] = self.lista_adyacencia[vertice]
+
+        distancias[origen] = 0
+        actual = origen
+        cantidad_vertices = len(self.vertices)
+        N = 0
+
+     
+        while N < cantidad_vertices:
+            vistos.append(actual)
+
+          
+            for adyacente in adyacencias[actual]:
+                vecino = adyacente[0]
+                arista = adyacente[1]
+
+                
+                if medio == "pie":
+                    peso = arista.tiempo_pie
+                elif medio == "moto":
+                    peso = arista.tiempo_moto
+                else:
+                    return ([], None)
+
+                if vecino not in vistos and arista.habilitado and peso is not None and peso > 0:
+                    suma = distancias[actual] + peso
+
+                    if suma < distancias[vecino]:
+                        distancias[vecino] = suma
+
+                        ruta_actualizada = caminos[actual].copy()
+                        ruta_actualizada.append((actual, vecino, arista))
+                        caminos[vecino] = ruta_actualizada
+
+            menor = float('inf')
+            siguiente_nodo = None
+
+            for nodo in distancias:
+                if nodo not in vistos:
+                    if distancias[nodo] < menor:
+                        menor = distancias[nodo]
+                        siguiente_nodo = nodo
+
+            if siguiente_nodo == None:
+                break
+
+            actual = siguiente_nodo
+            N = N + 1
+
+        
+        if distancias[destino] == float('inf'):
+            return ([], None)
+
+        ruta = caminos[destino]
+        costo_total = distancias[destino]
+        return (ruta, costo_total)
+    
+
+    def solicitar_desplazamiento(self, origen: VerticeGE, destino: VerticeGE, soldados: list[Soldado], medio: str):
+        
+        if origen not in self.vertices or destino not in self.vertices or origen == destino:
+            return (False, [], None)
+
+  
+        if medio == "pie" and len(soldados) != 1:
+            return (False, [], None)
+        elif medio == "moto" and len(soldados) not in (1, 2):
+            return (False, [], None)
+        elif medio not in ("pie", "moto"):
+            return (False, [], None)
+
+      
+        for s in soldados:
+            if s not in origen.soldados_presentes or s.en_transito:
+                return (False, [], None)
+
+        
+        ruta, tiempo_total = self.dijkstra_terrestre(origen, destino, medio)
+        if tiempo_total is None or len(ruta) == 0:
+            return (False, [], None)
+
+        
+        if destino.torre is not None:
+            if not destino.torre.reservar(soldados):
+                return (False, [], None)
+
+      
+        for s in soldados:
+            origen.soldados_presentes.remove(s)
+            s.en_transito = True
+
+        return (True, ruta, tiempo_total)
